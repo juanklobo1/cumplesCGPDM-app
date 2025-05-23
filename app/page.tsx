@@ -1,86 +1,129 @@
 ﻿'use client';
 
 import { useEffect, useState } from "react";
-import { format, isToday, parse } from "date-fns";
+import { parse, isToday, format } from "date-fns";
+import { es } from "date-fns/locale";
 
 export default function CumplesApp() {
-  const [group, setGroup] = useState("Coro Gospel");
-  const [name, setName] = useState("");
-  const [birthdate, setBirthdate] = useState("");
   const [data, setData] = useState([]);
   const [todayBirthdays, setTodayBirthdays] = useState([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("cumples-data");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setData(parsed);
-      const today = parsed.filter((item) => {
-        const d = parse(item.birthdate, "yyyy-MM-dd", new Date());
-        return isToday(d);
-      });
-      setTodayBirthdays(today);
-    }
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
   }, []);
 
-  const handleSubmit = () => {
-    if (!name || !birthdate) return;
-    const updated = [...data, { name, birthdate }];
-    setData(updated);
-    localStorage.setItem("cumples-data", JSON.stringify(updated));
-    setName("");
-    setBirthdate("");
-  };
+  useEffect(() => {
+    fetch("https://v1.nocodeapi.com/juanklobo1/google_sheets/TpgFsAlzlqQHZFPR?tabId=Respuestas%20de%20formulario%201")
+      .then((res) => res.json())
+      .then((res) => {
+        const rows = Array.isArray(res.data) ? res.data : [];
+        setData(rows);
+
+        const today = rows.filter((item) => {
+          const rawDate = item["Fecha de Nacimiento"];
+          if (!rawDate) return false;
+          try {
+            const date = parse(rawDate, "d/M/yyyy", new Date());
+            return isToday(date);
+          } catch {
+            return false;
+          }
+        });
+
+        setTodayBirthdays(today);
+      })
+      .catch((error) => {
+        console.error("Error al cargar datos:", error);
+        setData([]);
+        setTodayBirthdays([]);
+      });
+  }, []);
 
   const ordered = [...data].sort((a, b) => {
-    const da = parse(a.birthdate, "yyyy-MM-dd", new Date());
-    const db = parse(b.birthdate, "yyyy-MM-dd", new Date());
-    return da.getMonth() * 100 + da.getDate() - (db.getMonth() * 100 + db.getDate());
+    try {
+      const da = parse(a["Fecha de Nacimiento"], "d/M/yyyy", new Date());
+      const db = parse(b["Fecha de Nacimiento"], "d/M/yyyy", new Date());
+      return da.getMonth() * 100 + da.getDate() - (db.getMonth() * 100 + db.getDate());
+    } catch {
+      return 0;
+    }
   });
 
   return (
-    <div style={{ maxWidth: 500, margin: "auto", padding: 16 }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>Cumples de {group}</h1>
-
-      <input
-        placeholder="Nombre del grupo"
-        value={group}
-        onChange={(e) => setGroup(e.target.value)}
-        style={{ width: "100%", padding: 8, marginTop: 12, marginBottom: 20 }}
-      />
-
-      <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 8, marginBottom: 20 }}>
-        <h2 style={{ fontSize: 20, fontWeight: "bold" }}>Nuevo cumpleañero</h2>
-        <input
-          placeholder="Nombre"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ width: "100%", padding: 8, marginTop: 10 }}
-        />
-        <input
-          type="date"
-          value={birthdate}
-          onChange={(e) => setBirthdate(e.target.value)}
-          style={{ width: "100%", padding: 8, marginTop: 10, marginBottom: 10 }}
-        />
-        <button onClick={handleSubmit} style={{ padding: 10, backgroundColor: "#222", color: "white", border: "none", borderRadius: 4 }}>
-          Guardar
-        </button>
-      </div>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: "auto",
+        padding: 16,
+        backgroundColor: "#1e1e2f",
+        color: "#ffffff",
+        fontFamily: "'Poppins', sans-serif",
+        minHeight: "100vh",
+      }}
+    >
+      <h1 style={{ fontSize: 28, fontWeight: 600, textAlign: "center" }}>
+        🎂 Cumpleaños United Voices
+      </h1>
 
       {todayBirthdays.length > 0 && (
-        <div style={{ backgroundColor: "#fff3cd", padding: 10, marginBottom: 20 }}>
-          <strong>¡Hoy cumplen!</strong> {todayBirthdays.map((t) => t.name).join(", ")}
+        <div
+          style={{
+            backgroundColor: "#3a3a5c",
+            padding: 12,
+            marginTop: 20,
+            borderRadius: 8,
+            border: "1px solid #888",
+          }}
+        >
+          <strong>¡Hoy cumplen!</strong>{" "}
+          {todayBirthdays.map((t, i) => (
+            <span key={i}>
+              {t["Nombre-Apodo-Apellido"]}
+              {i < todayBirthdays.length - 1 ? ", " : ""}
+            </span>
+          ))}
         </div>
       )}
 
-      <h2 style={{ fontSize: 18, fontWeight: "bold" }}>Lista de cumpleaños</h2>
-      <ul>
-        {ordered.map((item, index) => (
-          <li key={index}>
-            <strong>{item.name}</strong> - {format(parse(item.birthdate, "yyyy-MM-dd", new Date()), "d 'de' MMMM")}
-          </li>
-        ))}
+      <h2 style={{ fontSize: 20, marginTop: 30 }}>🎈 Todos los cumpleaños</h2>
+      <ul style={{ paddingLeft: 16 }}>
+        {ordered.map((item, index) => {
+          let formatted = "Fecha inválida";
+          try {
+            const parsedDate = parse(item["Fecha de Nacimiento"], "d/M/yyyy", new Date());
+            formatted = format(parsedDate, "d 'de' MMMM", { locale: es });
+          } catch {}
+
+          return (
+            <li key={index} style={{ marginBottom: 18 }}>
+              <div>
+                <strong style={{ fontSize: 16 }}>{item["Nombre-Apodo-Apellido"]}</strong> — {formatted}
+              </div>
+
+              {item["Instagram o red social (opcional)"] && (
+                <div style={{ marginTop: 4 }}>
+                  <a
+                    href={item["Instagram o red social (opcional)"]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#80d4ff", textDecoration: "none" }}
+                  >
+                    📱 Red social
+                  </a>
+                </div>
+              )}
+
+              {item["Nro de celular (opcional)"] && (
+                <div style={{ marginTop: 4 }}>
+                  📞 {item["Nro de celular (opcional)"]}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
