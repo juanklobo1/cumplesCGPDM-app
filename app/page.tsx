@@ -26,7 +26,7 @@ export default function CumplesApp() {
           const rawDate = item["Fecha de Nacimiento"];
           if (!rawDate) return false;
           try {
-            const date = new Date(rawDate);
+            const date = parse(rawDate, 'dd/MM/yyyy', new Date());
             return isToday(date);
           } catch {
             return false;
@@ -44,8 +44,8 @@ export default function CumplesApp() {
 
   const ordered = [...data].sort((a, b) => {
     try {
-      const da = new Date(a["Fecha de Nacimiento"]);
-      const db = new Date(b["Fecha de Nacimiento"]);
+      const da = parse(a["Fecha de Nacimiento"], 'dd/MM/yyyy', new Date());
+      const db = parse(b["Fecha de Nacimiento"], 'dd/MM/yyyy', new Date());
       return da.getMonth() * 100 + da.getDate() - (db.getMonth() * 100 + db.getDate());
     } catch {
       return 0;
@@ -127,7 +127,7 @@ export default function CumplesApp() {
         {ordered.map((item, index) => {
           let formatted = "Fecha inválida";
           try {
-            const parsedDate = new Date(item["Fecha de Nacimiento"]);
+            const parsedDate = parse(item["Fecha de Nacimiento"], 'dd/MM/yyyy', new Date());
             formatted = format(parsedDate, "d 'de' MMMM", { locale: es });
           } catch {}
 
