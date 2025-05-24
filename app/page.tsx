@@ -26,7 +26,7 @@ export default function CumplesApp() {
           const rawDate = item["Fecha de Nacimiento"];
           if (!rawDate) return false;
           try {
-            const date = parse(rawDate, "d/M/yyyy", new Date());
+            const date = new Date(rawDate);
             return isToday(date);
           } catch {
             return false;
@@ -44,8 +44,8 @@ export default function CumplesApp() {
 
   const ordered = [...data].sort((a, b) => {
     try {
-      const da = parse(a["Fecha de Nacimiento"], "d/M/yyyy", new Date());
-      const db = parse(b["Fecha de Nacimiento"], "d/M/yyyy", new Date());
+      const da = new Date(a["Fecha de Nacimiento"]);
+      const db = new Date(b["Fecha de Nacimiento"]);
       return da.getMonth() * 100 + da.getDate() - (db.getMonth() * 100 + db.getDate());
     } catch {
       return 0;
@@ -68,12 +68,46 @@ export default function CumplesApp() {
         🎂 Cumpleaños United Voices
       </h1>
 
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 16, marginBottom: 24, gap: 12, flexWrap: "wrap" }}>
+        <a
+          href="https://calendar.google.com/calendar/u/0/r?cid=1233c7cda8324974bc5d7702cba88cf3d859601b04d1dbad42ddd1d3db7fe1aa@group.calendar.google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            backgroundColor: "#3a9bdc",
+            color: "#fff",
+            padding: "10px 16px",
+            borderRadius: 8,
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
+          📅 Ver calendario
+        </a>
+
+        <a
+          href="https://wa.me/5491167195617?text=🎉%20Hoy%20hay%20cumpleaños%20en%20el%20coro.%20Entrá%20a%20la%20app%20para%20ver%20los%20datos."
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            backgroundColor: "#25D366",
+            color: "#fff",
+            padding: "10px 16px",
+            borderRadius: 8,
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
+          📲 Avisar a Admin Anita
+        </a>
+      </div>
+
       {todayBirthdays.length > 0 && (
         <div
           style={{
             backgroundColor: "#3a3a5c",
             padding: 12,
-            marginTop: 20,
+            marginTop: 10,
             borderRadius: 8,
             border: "1px solid #888",
           }}
@@ -93,7 +127,7 @@ export default function CumplesApp() {
         {ordered.map((item, index) => {
           let formatted = "Fecha inválida";
           try {
-            const parsedDate = parse(item["Fecha de Nacimiento"], "d/M/yyyy", new Date());
+            const parsedDate = new Date(item["Fecha de Nacimiento"]);
             formatted = format(parsedDate, "d 'de' MMMM", { locale: es });
           } catch {}
 
