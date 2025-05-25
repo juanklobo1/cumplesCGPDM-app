@@ -16,7 +16,7 @@ export default function CumplesApp() {
   }, []);
 
   useEffect(() => {
-    fetch("https://v1.nocodeapi.com/juanklobo1/google_sheets/ZJkIXYRNinFCemiU?tabId=Respuestas%20de%20formulario%201")
+    fetch("https://v1.nocodeapi.com/juanklobo1/google_sheets/ZJkIXYRNinFCemiU")
       .then((res) => res.json())
       .then((res) => {
         const rows = Array.isArray(res.data) ? res.data : [];
