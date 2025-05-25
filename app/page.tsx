@@ -16,7 +16,7 @@ export default function CumplesApp() {
   }, []);
 
   useEffect(() => {
-    fetch("https://v1.nocodeapi.com/juanklobo1/google_sheets/TpgFsAlzlqQHZFPR?tabId=Respuestas%20de%20formulario%201")
+    fetch("https://v1.nocodeapi.com/juanklobo1/google_sheets/ZJkIXYRNinFCemiU?tabId=Respuestas%20de%20formulario%201")
       .then((res) => res.json())
       .then((res) => {
         const rows = Array.isArray(res.data) ? res.data : [];
@@ -58,19 +58,19 @@ export default function CumplesApp() {
         maxWidth: 600,
         margin: "auto",
         padding: 16,
-        backgroundColor: "#1e1e2f",
+        backgroundColor: "#121223",
         color: "#ffffff",
         fontFamily: "'Poppins', sans-serif",
         minHeight: "100vh",
       }}
     >
       <h1 style={{ fontSize: 28, fontWeight: 600, textAlign: "center" }}>
-        🎂 Cumpleaños United Voices
+        🎂 Cumpleaños CG PDM
       </h1>
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 16, marginBottom: 24, gap: 12, flexWrap: "wrap" }}>
         <a
-          href="https://calendar.google.com/calendar/u/0/r?cid=1233c7cda8324974bc5d7702cba88cf3d859601b04d1dbad42ddd1d3db7fe1aa@group.calendar.google.com"
+          href="https://calendar.google.com/calendar/embed?src=4ead99667807f5404c6b5ebc574d5bb58ec4399e21add715ea7d5a68988df584@group.calendar.google.com&ctz=America%2FArgentina%2FBuenos_Aires"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -82,11 +82,11 @@ export default function CumplesApp() {
             fontWeight: 600,
           }}
         >
-          📅 Ver calendario
+          📅 Ver calendario CG PDM
         </a>
 
         <a
-          href="https://wa.me/5491167195617?text=🎉%20Hoy%20hay%20cumpleaños%20en%20el%20coro.%20Entrá%20a%20la%20app%20para%20ver%20los%20datos."
+          href="https://wa.me/5491167195617?text=🎉%20Hoy%20hay%20cumpleaños%20en%20el%20Coro%20Gospel%20PDM.%20Entrá%20a%20la%20app%20para%20ver%20los%20datos."
           target="_blank"
           rel="noopener noreferrer"
           style={{
